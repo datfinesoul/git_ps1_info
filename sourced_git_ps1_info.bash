@@ -1,9 +1,10 @@
 function git_ps1_info {
 # exit if we are not in a git repo
-git show > /dev/null 2>&1 || return
+git rev-parse --git-dir > /dev/null 2>&1 || return
 
 # assign the branch to a BRANCH variable
 local BRANCH="$(git symbolic-ref HEAD 2> /dev/null)"
+#local BRANCH="$(git status -bsuno --porcelain 2>&1 | head -n 1 | fgrep '...' | sed -e 's/\.\.\..*$//g' | sed -e 's/## //g')"
 local BRANCH="${BRANCH#refs/heads/}"
 
 # if not on a named branch, show commit hash
