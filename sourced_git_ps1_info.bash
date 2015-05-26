@@ -1,10 +1,14 @@
 function git_ps1_info {
+# local EMPTY_TREE_HASH="$(git hash-object -t tree /dev/null)"
 # exit if we are not in a git repo
 git rev-parse --git-dir > /dev/null 2>&1 || return
-
+# exit if the repo is empty
+if ! git log -1 > /dev/null 2>&1; then
+  printf "(NEW GIT REPO)"
+  return
+fi
 # assign the branch to a BRANCH variable
 local BRANCH="$(git symbolic-ref HEAD 2> /dev/null)"
-#local BRANCH="$(git status -bsuno --porcelain 2>&1 | head -n 1 | fgrep '...' | sed -e 's/\.\.\..*$//g' | sed -e 's/## //g')"
 local BRANCH="${BRANCH#refs/heads/}"
 
 # if not on a named branch, show commit hash
